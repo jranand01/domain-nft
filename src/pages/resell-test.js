@@ -53,7 +53,7 @@ export default function ResellNFT() {
                 />
                 {
                     image && (
-                        <img className="rounded  ratio-4x3" width="150" src={image} />
+                        <img className="rounded mt-4 ratio-4x3" width="150" src={image} />
                     )
                 }
                 <button onClick={listNFTForSale} className="btn btn-dark btn-lg">

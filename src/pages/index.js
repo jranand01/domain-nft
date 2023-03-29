@@ -34,7 +34,6 @@ const Index = () => {
             let price = ethers.utils.formatUnits(i.price.toString(), 'ether')
             let item = {
                 price,
-                tokenUri,
                 itemId: i.itemId.toNumber(),
                 seller: i.seller,
                 owner: i.owner,
@@ -97,8 +96,6 @@ const Index = () => {
                                         <div className="p-1">
                                             <h2 className={'text-white'}>{nft.name}</h2>
                                             <p className="text-white">{nft.description}</p>
-                                            <p className="text-white">{nft.itemId}</p>
-                                            <p className="text-white">{nft.tokenUri}</p>
                                         </div>
                                     </div>
                                     <div className={'footer'}>

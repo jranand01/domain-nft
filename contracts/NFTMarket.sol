@@ -40,19 +40,16 @@ contract NFTMarket is ReentrancyGuard {
         bool sold
     );
 
-    /* Updates the listing price of the contract */
-    function updateListingPrice(uint _listingPrice) public payable {
-        require(owner == msg.sender, "Only marketplace owner can update listing price.");
-        listingPrice = _listingPrice;
-    }
-
-
     /* ---------------------------Returns the market listing price of the nft contract */
 
     function getListingPrice() public view returns (uint256) {
         return listingPrice;
     }
-
+    /* Updates the listing price of the contract */
+    function updateListingPrice(uint _listingPrice) public payable {
+        require(owner == msg.sender, "Only marketplace owner can update listing price.");
+        listingPrice = _listingPrice;
+    }
     /* put places an item for sale on the nft marketplace */
     function createMarketItem(
         address nftContract,
@@ -89,7 +86,7 @@ contract NFTMarket is ReentrancyGuard {
         );
     }
 
-   //* allows someone to resell a token they have purchased *//*
+//    allows someone to resell a token they have purchased
     function resellToken(uint256 tokenId, uint256 price) public payable {
         require(idToMarketItem[tokenId].owner == msg.sender, "Only item owner can perform this operation");
         require(msg.value == listingPrice, "Price must be equal to listing price");
