@@ -1,5 +1,5 @@
-import { ethers } from 'ethers'
-import React, { useEffect, useState } from 'react'
+import {ethers} from 'ethers'
+import React, {useEffect, useState} from 'react'
 import axios from 'axios'
 import Web3Modal from "web3modal"
 import Button from 'react-bootstrap/Button';
@@ -18,6 +18,7 @@ const ReSell = () => {
     useEffect(() => {
         loadNFTs()
     }, [])
+
     async function loadNFTs() {
         const web3Modal = new Web3Modal({
             network: "mainnet",
@@ -51,15 +52,23 @@ const ReSell = () => {
         setLoadingState('loaded')
     }
 
-    const [newPrice, setNewPrice] = useState('0');
+    const [currentItem, setCurrentItem] = useState([])
 
+    const handleCurrentItem = async (i) => {
+        setCurrentItem(nfts[i])
+    }
+
+    const [newPrice, setNewPrice] = useState('0');
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const handleShow = (i) => {
+        handleCurrentItem(i)
+        setShow(true)
+    }
 
 
-
-    if (loadingState === 'loaded' && !nfts.length) return (<h2 className="py-10 px-20 text-danger">No NFTS for re-sell</h2>)
+    if (loadingState === 'loaded' && !nfts.length) return (
+        <h2 className="py-10 px-20 text-danger">No NFTS for re-sell</h2>)
     return (
         <>
             <div className="container">
@@ -69,17 +78,12 @@ const ReSell = () => {
 
                     <hr/>
                     <div className="row">
-
                         {
                             nfts.map((nft, i) => (
-
                                 <div key={i} className="col col-4">
                                     <div className="card h-50 bg-success ratio ratio-4x3 ">
-                                        <img src={nft.image} className="rounded h-100"  />
-
-
+                                        <img src={nft.image} className="rounded h-100"/>
                                     </div>
-
                                     <div className={'footer bg-success'}>
                                         <div className="p-1">
                                             <h2 className={'text-white'}>{nft.name}</h2>
@@ -87,65 +91,67 @@ const ReSell = () => {
                                             <p className="text-white">{nft.tokenUri}</p>
                                         </div>
                                         <div className=" p-3 bg-dark  ">
-                                            <div className={'col'}><p className="text-2xl font-bold text-white">Purchased on - {nft.price} Eth</p></div>
-                                            <div className={'col'}> <button className={'btn btn-light'} onClick={handleShow}> Re-sell options </button>  </div>
-
+                                            <div className={'col'}><p
+                                                className="text-2xl font-bold text-white">Purchased on
+                                                - {nft.price} Eth</p></div>
+                                            <div className={'col'}>
+                                                <button className={'btn btn-light'}
+                                                        onClick={() => handleShow(i)}> Re-sell
+                                                    options
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             ))
                         }
-
                     </div>
-
                 </div>
-
             </div>
-<br/><br/><br/>
+            <br/><br/><br/>
 
             {/*-------------resell-popup*/}
             <Modal
                 show={show}
                 onHide={handleClose}
                 backdrop="static"
-                keyboard={false}
-
-            >
+                keyboard={false}>
                 <Modal.Header closeButton>
                     <Modal.Title>Re-sell NFT Domain</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <div className="row" >
-
+                    <div className="row">
                         {
-                            nfts.map((nft, i) => (
+                            <div className="col p-4 ">
+                                <div className=" bg-success text-center ">
+                                    <img src={currentItem.image} className="rounded text-center" height="200px"
+                                         width="400px"/>
+                                </div>
 
-                                <div key={i} className="col p-4 ">
-                                    <div className=" bg-success text-center ">
-                                        <img src={nft.image} className="rounded text-center" height="200px" width="400px"  />
+                                <div className={'footer bg-success'}>
+                                    <div className="p-1">
+                                        <h2 className={'text-white'}>{currentItem.name}</h2>
+                                        <p className="text-white">{currentItem.description}</p>
                                     </div>
-
-                                    <div className={'footer bg-success'}>
-                                        <div className="p-1">
-                                            <h2 className={'text-white'}>{nft.name}</h2>
-                                            <p className="text-white">{nft.description}</p>
-                                        </div>
-                                        <div className="p-3 bg-dark row">
-                                            <div className={'col'}><p className="text-2xl font-bold text-white">Current Price - {nft.price} Eth</p>
-
-                                            </div>
-                                            <div className={'col'}>
-                                                <button className={'btn btn-danger'} > Pause sell </button>  </div><br/>
-                                                <form className={''} action={''}> <input type={'number'} className={'p-1'} value={newPrice} onChange={(e)=>{setNewPrice(e.target.value)}} placeholder={'new price ETH'} name="price" /> </form>
-                                       <h2 className="text-2xl font-bold text-primary p-3">New Price for sell- <span className={'text-white'}> {newPrice} Eth</span></h2>
+                                    <div className="p-3 bg-dark row">
+                                        <div className={'col'}><p className="text-2xl font-bold text-white">Current
+                                            Price - {currentItem.price} Eth</p>
 
                                         </div>
-
+                                        <div className={'col'}>
+                                            <button className={'btn btn-danger'}> Pause sell</button>
+                                        </div>
+                                        <br/>
+                                        <form className={''} action={''}><input type={'number'} className={'p-1'}
+                                                                                value={newPrice} onChange={(e) => {
+                                            setNewPrice(e.target.value)
+                                        }} placeholder={'new price ETH'} name="price"/></form>
+                                        <h2 className="text-2xl font-bold text-primary p-3">New Price for
+                                            sell- <span className={'text-white'}> {newPrice} Eth</span></h2>
                                     </div>
                                 </div>
-                            ))
+                            </div>
                         }
-
                     </div>
 
                 </Modal.Body>
@@ -159,20 +165,19 @@ const ReSell = () => {
 
             {/*--------------./ resell popup end*/}
             <div className={'container'}>
-
-
-            <br/>
-            <h4>Discussion topics</h4>
-            <h5><ul className={'text-secondary'}>
-                <li>Get data from multiple web3 domain provider to list out NFt Domain on our platform.</li>
-                <li>What are Re-sell options and prices modification for your Domain NFTs.</li>
-                <li>Fixed price, Auction/Biding domains.</li>
-                <li>Clear User flow for listing domain, re-sell,buy etc. </li>
-                <li>We need complete work flow for this application phase 1 point by point. </li>
-            </ul></h5>
+                <br/>
+                <h4>Discussion topics</h4>
+                <h5>
+                    <ul className={'text-secondary'}>
+                        <li>Get data from multiple web3 domain provider to list out NFt Domain on our platform.</li>
+                        <li>What are Re-sell options and prices modification for your Domain NFTs.</li>
+                        <li>Fixed price, Auction/Biding domains.</li>
+                        <li>Clear User flow for listing domain, re-sell,buy etc.</li>
+                        <li>We need complete work flow for this application phase 1 point by point.</li>
+                    </ul>
+                </h5>
             </div>
             <div className={'bg-white p-5'}> © Copyright 2023. All Rights Reserved. Anand Ujan Code web3</div>
-
         </>
     );
 };
