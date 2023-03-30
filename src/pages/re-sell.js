@@ -59,7 +59,10 @@ const ReSell = () => {
         setCurrentItem(nfts[i])
     }
 
-    const [newPrice, setNewPrice] = useState('0');
+/*    useEffect(()=>{
+        updateFormInput
+    },[currentItem])*/
+
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = (i) => {
@@ -96,13 +99,10 @@ const ReSell = () => {
         let listingPrice = await contract.getListingPrice()
 
         listingPrice = listingPrice.toString()
-        let transaction = await contract.resellToken(id, priceFormatted, {value: listingPrice})
+        let transaction = await contract.resellToken(currentItem.tokenId, priceFormatted, {value: listingPrice})
         await transaction.wait()
-
         router.push('/')
     }
-
-
 
     // ---------------./
 
@@ -114,14 +114,13 @@ const ReSell = () => {
                 <div className="flex justify-center">
                     <h2 className={'text-danger'}>Re-sell your Domain ({nfts.length})</h2>
                     <h5 className={'text-secondary'}>You have total ({nfts.length}) NFTs </h5>
-
                     <hr/>
                     <div className="row">
                         {
                             nfts.map((nft, i) => (
                                 <div key={i} className="col col-4">
                                     <div className="card h-50 bg-success ratio ratio-4x3 ">
-                                        <img src={nft.image} className="rounded h-100"/>
+                                        <img src={nft.image} className="rounded h-100" alt={'NFT image'}/>
                                     </div>
                                     <div className={'footer bg-success'}>
                                         <div className="p-1">
@@ -167,7 +166,6 @@ const ReSell = () => {
                                     <img src={currentItem.image} className="rounded text-center" height="200px"
                                          width="400px"/>
                                 </div>
-
                                 <div className={'footer bg-success'}>
                                     <div className="p-1">
                                         <h2 className={'text-white'}>{currentItem.name}</h2>
@@ -176,7 +174,6 @@ const ReSell = () => {
                                     <div className="p-3 bg-dark row">
                                         <div className={'col'}><p className="text-2xl font-bold text-white">Current
                                             Price - {currentItem.price} Eth</p>
-
                                         </div>
                                         <div className={'col'}>
                                             <button className={'btn btn-danger'}> Pause sell</button>
@@ -184,14 +181,10 @@ const ReSell = () => {
                                         <br/>
                                         <form className={''} action={''}><input type={'number'} className={'p-1'}
                                                                                 onChange={e => updateFormInput({...formInput, price: e.target.value})}
-                                                                                // value={newPrice}
-                                                                                // onChange={(e) => { setNewPrice(e.target.value) }}
-
-
-
+                                                                                value={formInput.price}
                                                                                 placeholder={'new price ETH'} name="price"/></form>
                                         <h2 className="text-2xl font-bold text-primary p-3">New Price for
-                                            sell- <span className={'text-white'}> {newPrice} Eth</span></h2>
+                                            sell- <span className={'text-white'}> {formInput.price} Eth</span></h2>
                                     </div>
                                 </div>
                             </div>
@@ -203,10 +196,6 @@ const ReSell = () => {
                     <Button variant="secondary" onClick={handleClose}>
                         Cancel
                     </Button>
-                    <a href="http://localhost:3000/re-sell?id=2&tokenURI=https://ipfs.io/ipfs/Qmf2UwDc7rJefCQ9qeiQuEuFFVaQVhAxbghd1SkiEZ4wsN">
-                        <button  className="btn btn-dark btn-lg">
-                            List NFT
-                        </button></a>
                     <Button variant="primary" onClick={listNFTForSale}>Publish</Button>
                 </Modal.Footer>
             </Modal>
