@@ -75,6 +75,8 @@ export default function CreateItem() {
         let event = tx.events[0]
         let value = event.args[2]
         let tokenId = value.toNumber()
+        console.log("Token Id*************************")
+        console.log(tx)
 
         const price = ethers.utils.parseUnits(formInput.price, 'ether')
 

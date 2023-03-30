@@ -10,6 +10,7 @@ import {
 
 import Market from '/artifacts/contracts/NFTMarket.sol/NFTMarket.json'
 import NFT from '/artifacts/contracts/NFT.sol/NFT.json'
+import {useRouter} from "next/router";
 
 const ReSell = () => {
 
@@ -67,6 +68,44 @@ const ReSell = () => {
     }
 
 
+    // ----------------------------------------------------------------------------resell nfts
+    const [formInput, updateFormInput] = useState({price: '', image: ''})
+    const router = useRouter()
+    const {id, tokenURI} = router.query
+    const {image, price} = formInput
+
+    useEffect(() => {
+        fetchNFT()
+    }, [id])
+
+    async function fetchNFT() {
+        if (!tokenURI) return
+        const meta = await axios.get(tokenURI)
+        updateFormInput(state => ({...state, image: meta.data.image}))
+    }
+
+    async function listNFTForSale() {
+        if (!price) return
+        const web3Modal = new Web3Modal()
+        const connection = await web3Modal.connect()
+        const provider = new ethers.providers.Web3Provider(connection)
+        const signer = provider.getSigner()
+
+        const priceFormatted = ethers.utils.parseUnits(formInput.price, 'ether')
+        let contract = new ethers.Contract(nftmarketaddress, Market.abi, signer)
+        let listingPrice = await contract.getListingPrice()
+
+        listingPrice = listingPrice.toString()
+        let transaction = await contract.resellToken(id, priceFormatted, {value: listingPrice})
+        await transaction.wait()
+
+        router.push('/')
+    }
+
+
+
+    // ---------------./
+
     if (loadingState === 'loaded' && !nfts.length) return (
         <h2 className="py-10 px-20 text-danger">No NFTS for re-sell</h2>)
     return (
@@ -89,6 +128,7 @@ const ReSell = () => {
                                             <h2 className={'text-white'}>{nft.name}</h2>
                                             <p className="text-white">{nft.description}</p>
                                             <p className="text-white">{nft.tokenUri}</p>
+                                            <p className="text-white">{nft.tokenId}</p>
                                         </div>
                                         <div className=" p-3 bg-dark  ">
                                             <div className={'col'}><p
@@ -143,9 +183,13 @@ const ReSell = () => {
                                         </div>
                                         <br/>
                                         <form className={''} action={''}><input type={'number'} className={'p-1'}
-                                                                                value={newPrice} onChange={(e) => {
-                                            setNewPrice(e.target.value)
-                                        }} placeholder={'new price ETH'} name="price"/></form>
+                                                                                onChange={e => updateFormInput({...formInput, price: e.target.value})}
+                                                                                // value={newPrice}
+                                                                                // onChange={(e) => { setNewPrice(e.target.value) }}
+
+
+
+                                                                                placeholder={'new price ETH'} name="price"/></form>
                                         <h2 className="text-2xl font-bold text-primary p-3">New Price for
                                             sell- <span className={'text-white'}> {newPrice} Eth</span></h2>
                                     </div>
@@ -159,7 +203,11 @@ const ReSell = () => {
                     <Button variant="secondary" onClick={handleClose}>
                         Cancel
                     </Button>
-                    <Button variant="primary">Publish</Button>
+                    <a href="http://localhost:3000/re-sell?id=2&tokenURI=https://ipfs.io/ipfs/Qmf2UwDc7rJefCQ9qeiQuEuFFVaQVhAxbghd1SkiEZ4wsN">
+                        <button  className="btn btn-dark btn-lg">
+                            List NFT
+                        </button></a>
+                    <Button variant="primary" onClick={listNFTForSale}>Publish</Button>
                 </Modal.Footer>
             </Modal>
 

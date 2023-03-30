@@ -95,7 +95,6 @@ contract NFTMarket is ReentrancyGuard {
         idToMarketItem[tokenId].seller = payable(msg.sender);
         idToMarketItem[tokenId].owner = payable(address(this));
         _itemsSold.decrement();
-
     }
 
     /* Creates the sale of a marketplace item */

@@ -44,21 +44,25 @@ export default function ResellNFT() {
     }
 
     return (
+       // http://localhost:3000/resell-test?id=1&tokenURI=https://ipfs.io/ipfs/Qmf2UwDc7rJefCQ9qeiQuEuFFVaQVhAxbghd1SkiEZ4wsN
+
         <div className="container">
             <div className="row">
+                <div className={'col'}>
                 <input
                     placeholder="Asset Price in Eth"
-                    className="mt-2 border rounded p-4"
+                    className="p-4 "
                     onChange={e => updateFormInput({...formInput, price: e.target.value})}
                 />
                 {
                     image && (
-                        <img className="rounded mt-4 ratio-4x3" width="150" src={image} />
+                        <img className="img-thumbnail w-25" src={image} />
                     )
                 }
                 <button onClick={listNFTForSale} className="btn btn-dark btn-lg">
                     List NFT
                 </button>
+            </div>
             </div>
         </div>
     )
