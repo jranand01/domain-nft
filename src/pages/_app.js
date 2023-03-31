@@ -8,7 +8,7 @@ function Marketplace({Component, pageProps}) {
         <div>
             <div className={'container'}>
                 <nav className="p-6">
-                    <h1 className="text-dark text-center"><span><img src={'img/customer3.jpg'} className={'rounded'} height={'30px'}/> <span style={{fontSize:"12px"}}>Hi, Anand</span></span> Endless Domain <span style={{fontSize:"14px"}} className="text-primary">Logout</span></h1>
+                    <h1 className="text-dark text-center">Endless Domain</h1>
                     <div className="mt-4 p-2">
                         <Link href="/"
                               className="btn btn-dark p-3 mx-1">
@@ -38,11 +38,6 @@ function Marketplace({Component, pageProps}) {
                         <Link href="/resell-test"
                               className="btn btn-warning p-3 mx-1">
                             Re-sale-Test
-
-                        </Link>
-                        <Link href="/connect"
-                              className="btn btn-dark p-3 mx-1">
-                            Connect your Wallet
 
                         </Link>
                     </div>

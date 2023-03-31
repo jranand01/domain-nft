@@ -106,7 +106,10 @@ const ReSell = () => {
     // ---------------./
 
     if (loadingState === 'loaded' && !nfts.length) return (
-        <h2 className="py-10 px-20 text-danger">No NFTS for re-sell</h2>)
+        <div className={'container'}>
+            <h2 className="py-10 px-20 text-danger">No NFTS for re-sell</h2>
+        </div>
+    )
     return (
         <>
             <div className="container">

@@ -63,10 +63,13 @@ const Index = () => {
     }
 
     if (loadingState === 'loaded' && !nfts.length) return (
-        <h1 className="px-20 py-10 text-3xl text-danger"><br/>No NFT Domain items in marketplace <br/><br/> <Link
-            href="/create-item">
-            <button type="button" className="btn btn-dark p-5 text-center">Create NFTs</button>
-        </Link></h1>)
+        <div className={'container'}>
+            <h1 className="px-20 py-10 text-3xl text-danger"><br/>No NFT Domain items in marketplace <br/><br/> <Link
+                href="/create-item">
+                <button type="button" className="btn btn-dark p-5 text-center">Create NFTs</button>
+            </Link></h1>
+        </div>
+    )
 
 
     return (
