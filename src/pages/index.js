@@ -100,7 +100,9 @@ const Index = () => {
                                     </div>
                                     <div className={'footer'}>
                                         <button className="btn btn-lg btn-warning w-100" onClick={() => buyNft(nft)}>
-                                            Buy ({nft.price} <small>ETH</small>)
+
+                                            <p className="text-2xl font-bold text-white">Buy </p>
+                                            <h2 className="text-2xl font-bold text-white">{nft.price} Eth</h2>
                                         </button>
                                     </div>
                                 </div>
