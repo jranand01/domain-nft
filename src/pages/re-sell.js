@@ -132,9 +132,11 @@ const ReSell = () => {
                                             <p className="text-white">{nft.tokenId}</p>
                                         </div>
                                         <div className=" p-3 bg-dark  ">
-                                            <div className={'col'}><p
-                                                className="text-2xl font-bold text-white">Purchased on
-                                                - {nft.price} Eth</p></div>
+                                            <div className={'col'}>
+                                                <p className="text-2xl font-bold text-white">Purchased on </p>
+                                                <h2 className="text-2xl font-bold text-white">{nft.price} Eth</h2>
+
+                                            </div>
                                             <div className={'col'}>
                                                 <button className={'btn btn-light'}
                                                         onClick={() => handleShow(i)}> Re-sell
