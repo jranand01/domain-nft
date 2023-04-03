@@ -61,6 +61,20 @@ export default function CreatorDashboard() {
 
     }
 
+    async function cancelNFTs(nft) {
+        const web3Modal = new Web3Modal()
+        const connection = await web3Modal.connect()
+        const provider = new ethers.providers.Web3Provider(connection)
+        const signer = provider.getSigner()
+        const contract = new ethers.Contract(nftmarketaddress, Market.abi, signer)
+        console.log ("Your debug message == " + nft.tokenId);
+
+
+    }
+
+
+
+
     if (loadingState === 'loaded' && !nfts.length) return (
         <div className={'container'}>
             <h1 className="py-10 px-20 text-3xl">No assets found</h1>
@@ -100,6 +114,9 @@ export default function CreatorDashboard() {
 
                                                     <div className={'footer'}>
                                                         <div className="p-4 bg-warning">
+                                                            <div className={'col'}>
+                                                                <button className={'btn btn-danger'} onClick={() => cancelNFTs(nft)}> Pause sell</button>
+                                                            </div>
                                                             <p className="text-2xl font-bold text-white">Sale Price </p>
                                                             <h2 className="text-2xl font-bold text-white">{nft.price} Eth</h2>
                                                         </div>

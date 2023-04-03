@@ -179,9 +179,7 @@ const ReSell = () => {
                                         <div className={'col'}><p className="text-2xl font-bold text-white">Current
                                             Price - {currentItem.price} Eth</p>
                                         </div>
-                                        <div className={'col'}>
-                                            <button className={'btn btn-danger'}> Pause sell</button>
-                                        </div>
+
                                         <br/>
                                         <form className={''} action={''}><input type={'number'} className={'p-1'}
                                                                                 onChange={e => updateFormInput({...formInput, price: e.target.value})}

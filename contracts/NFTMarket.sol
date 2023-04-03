@@ -100,10 +100,17 @@ contract NFTMarket is ReentrancyGuard {
         _itemsSold.decrement();
         IERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
     }
+    /* cancel your nft from sale of a marketplace item */
+    function cancelSellOrder(uint256 tokenId) external {
+        // Cancel the sell order
+        require(sellOrders[tokenId].active == true, "Sell order does not exist");
+        require(sellOrders[tokenId].seller == msg.sender, "Only seller can cancel sell order");
+        delete sellOrders[tokenId];
+    }
 
+    /* -------------sending nft to buyer and ransfer matic to seller  */
 
-
-    /* Creates the sale of a marketplace item */
+    /* buy Creates the sale of a marketplace item */
     /* Transfers ownership of the nft item, as well as funds between parties token address  to buyer??*/
     /* -------------sending nft to buyer and ransfer matic to seller  */
     function createMarketSale(
@@ -123,7 +130,11 @@ contract NFTMarket is ReentrancyGuard {
         payable(owner).transfer(listingPrice);
     }
 
-    /* ----------------this  function to return all unsold market nfts */
+
+
+
+
+    /* ---------------- this  function to return all unsold market nfts */
     function fetchMarketItems() public view returns (MarketItem[] memory) {
         uint itemCount = _itemIds.current();
         uint unsoldItemCount = _itemIds.current() - _itemsSold.current();
@@ -140,6 +151,7 @@ contract NFTMarket is ReentrancyGuard {
         }
         return items;
     }
+
     /*--------------- This function Returns only nfts that a user has purchased  */
     /*--------------- owner left nft= owner MarketItem[]  */
     function fetchMyNFTs() public view returns (MarketItem[] memory) {
