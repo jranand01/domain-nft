@@ -37,6 +37,7 @@ const Index = () => {
                 price,
                 itemId: i.itemId.toNumber(),
                 seller: i.seller,
+                canceled: i.canceled,
                 owner: i.owner,
                 image: meta.data.image,
                 name: meta.data.name,

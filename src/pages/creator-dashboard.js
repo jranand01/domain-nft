@@ -9,6 +9,7 @@ import {
 
 import Market from '/artifacts/contracts/NFTMarket.sol/NFTMarket.json'
 import NFT from '/artifacts/contracts/NFT.sol/NFT.json'
+import {useRouter} from "next/router";
 
 export default function CreatorDashboard() {
     const [nfts, setNfts] = useState([])
@@ -21,7 +22,7 @@ export default function CreatorDashboard() {
     useEffect(() => {
         loadNFTs()
     }, [])
-
+    const router = useRouter()
     async function loadNFTs() {
         const web3Modal = new Web3Modal({
             network: "mainnet",
@@ -45,6 +46,7 @@ export default function CreatorDashboard() {
                 seller: i.seller,
                 owner: i.owner,
                 sold: i.sold,
+                canceled: i.canceled,
                 image: meta.data.image,
                 name: meta.data.name,
                 description: meta.data.description,
@@ -52,8 +54,8 @@ export default function CreatorDashboard() {
             return item
         }))
         /* create a filtered array of items that have been sold */
-        const soldItems = items.filter(i => i.sold)
-        const unSoldItems = items.filter(i => !i.sold)
+        const soldItems = items.filter(i => i.sold & i.canceled)
+        const unSoldItems = items.filter(i => !i.sold && !i.canceled)
         setSold(soldItems)
         setUnSold(unSoldItems)
         setNfts(items)
@@ -68,8 +70,27 @@ export default function CreatorDashboard() {
         const signer = provider.getSigner()
         const contract = new ethers.Contract(nftmarketaddress, Market.abi, signer)
         console.log ("Your debug message == " + nft.tokenId);
+        // let listingPrice = await contract.getListingPrice()
+        // listingPrice = listingPrice.toString()
+         // const price = ethers.utils.parseUnits(nft.price.toString(), 'ether')
+        // const cancelnft = await contract.cancelSellOrder(nft.owner,nft.tokenId)
+        const cancelnft = await contract.cancelSellOrder(nftaddress,nft.tokenId);
+        await cancelnft.wait()
+         router.push('/creator-dashboard')
+    }
+    async function handleCancel() {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
 
+        const nftContract = new ethers.Contract(
+            MyNFT.address,
+            MyNFT.abi,
+            signer
+        );
 
+        const cancelTx = await nftContract.cancel(nftId);
+
+        await cancelTx.wait();
     }
 
 

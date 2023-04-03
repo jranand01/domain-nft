@@ -10,6 +10,7 @@ contract NFTMarket is ReentrancyGuard {
     using Counters for Counters.Counter;
     Counters.Counter private _itemIds;
     Counters.Counter private _itemsSold;
+    Counters.Counter private _tokensCanceled;
 
     address payable owner;
     uint256 listingPrice = 0.025 ether;
@@ -26,6 +27,7 @@ contract NFTMarket is ReentrancyGuard {
         address payable owner;
         uint256 price;
         bool sold;
+        bool canceled;
     }
 
     mapping(uint256 => MarketItem) private idToMarketItem;
@@ -37,7 +39,8 @@ contract NFTMarket is ReentrancyGuard {
         address seller,
         address owner,
         uint256 price,
-        bool sold
+        bool sold,
+       bool canceled
     );
 
     /* ---------------------------Returns the market listing price of the nft contract */
@@ -70,7 +73,8 @@ contract NFTMarket is ReentrancyGuard {
         //-------------------------address 0 will not get owner anything like commision after sale so, need to keep owner address
             payable(address(0)),
             price,
-            false
+            false,
+                false
         );
         IERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
         emit MarketItemCreated(
@@ -80,7 +84,8 @@ contract NFTMarket is ReentrancyGuard {
             msg.sender,
             address(0),
             price,
-            false
+            false,
+                false
         );
     }
 
@@ -101,13 +106,29 @@ contract NFTMarket is ReentrancyGuard {
         IERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
     }
     /* cancel your nft from sale of a marketplace item */
-    function cancelSellOrder(uint256 tokenId) external {
+/*    function cancelSellOrder(uint256 tokenId) external {
         // Cancel the sell order
-        require(sellOrders[tokenId].active == true, "Sell order does not exist");
-        require(sellOrders[tokenId].seller == msg.sender, "Only seller can cancel sell order");
-        delete sellOrders[tokenId];
-    }
+//        require(idToMarketItem[tokenId].sold == true, "Sell order does not exist");
+        *//*require(idToMarketItem[tokenId].seller == msg.sender, "Only seller can cancel sell order");
+        delete idToMarketItem[tokenId];*//*
+        setApprovalForAll(contractAddress, false);
+    }*/
+    /**
+      * @dev Cancel a market item
+     */
+    function cancelSellOrder(address nftContract, uint256 marketItemId) public payable nonReentrant {
+        uint256 tokenId = idToMarketItem[marketItemId].tokenId;
+        require(tokenId > 0, "Market item has to exist");
 
+        require(idToMarketItem[marketItemId].seller == msg.sender, "You are not the seller");
+
+        IERC721(nftContract).transferFrom(address(this), msg.sender, tokenId);
+
+        idToMarketItem[marketItemId].owner = payable(msg.sender);
+        idToMarketItem[marketItemId].canceled = true;
+
+        _tokensCanceled.increment();
+    }
     /* -------------sending nft to buyer and ransfer matic to seller  */
 
     /* buy Creates the sale of a marketplace item */
@@ -137,7 +158,9 @@ contract NFTMarket is ReentrancyGuard {
     /* ---------------- this  function to return all unsold market nfts */
     function fetchMarketItems() public view returns (MarketItem[] memory) {
         uint itemCount = _itemIds.current();
-        uint unsoldItemCount = _itemIds.current() - _itemsSold.current();
+        uint256 canceledItemsCount = _tokensCanceled.current();
+        uint256 soldItemsCount = _itemsSold.current();
+        uint unsoldItemCount = _itemIds.current() - soldItemsCount - canceledItemsCount;
         uint currentIndex = 0;
 
         MarketItem[] memory items = new MarketItem[](unsoldItemCount);

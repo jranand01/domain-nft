@@ -94,11 +94,11 @@ const ReSell = () => {
         const provider = new ethers.providers.Web3Provider(connection)
         const signer = provider.getSigner()
 
-         const price2 = ethers.utils.parseUnits(formInput.price, 'ether')
          let contract = new ethers.Contract(nftmarketaddress, Market.abi, signer)
          let listingPrice = await contract.getListingPrice()
          listingPrice = listingPrice.toString()
-        let transaction = await contract.resellToken(currentItem.tokenId,nftaddress, {value: listingPrice})
+        let transaction = await contract.resellToken(currentItem.tokenId,nftaddress,
+            {value: listingPrice})
        await transaction.wait()
         router.push('/')
     }
