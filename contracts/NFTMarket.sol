@@ -12,12 +12,19 @@ contract NFTMarket is ReentrancyGuard {
     Counters.Counter private _itemsSold;
     Counters.Counter private _tokensCanceled;
 
+    address contractAddress;
+
+
+
     address payable owner;
     uint256 listingPrice = 0.025 ether;
 
     constructor() {
         owner = payable(msg.sender);
+
     }
+
+
     //-------------------------------- market item stock
     struct MarketItem {
         uint itemId;
@@ -188,7 +195,7 @@ contract NFTMarket is ReentrancyGuard {
     }
 
     /* ---------------- anand this  function to return all unsold market nfts */
-    function fetchAllMarketItems() public view returns (MarketItem[] memory) {
+    function ujanfetchAllMarketItems() public view returns (MarketItem[] memory) {
         uint itemCount = _itemIds.current();
         uint256 canceledItemsCount = _tokensCanceled.current();
         uint256 soldItemsCount = _itemsSold.current();
@@ -197,7 +204,7 @@ contract NFTMarket is ReentrancyGuard {
 
         MarketItem[] memory items = new MarketItem[](unsoldItemCount);
         for (uint i = 0; i < itemCount; i++) {
-            if (idToMarketItem[i + 1].owner == address(0)) {
+            if (idToMarketItem[i + 1].owner == address(0) || idToMarketItem[i + 1].owner == address(this)) {
                 uint currentId = i + 1;
                 MarketItem storage currentItem = idToMarketItem[currentId];
                 items[currentIndex] = currentItem;

@@ -121,8 +121,10 @@ const Index = () => {
                                                     <div className="p-1">
                                                         <h2 className={'text-white'}>{nft.name}</h2>
                                                         <p className="text-white">{nft.description}</p>
-                                                        {/*<p className={'text-white'}>Owner: {nft.owner}</p>*/}
-                                                        {/*<p className={'text-white'}> Seller: {nft.seller}</p>*/}
+                                                        <p className={'text-white'}>Owner: {nft.owner}</p>
+                                                        <p className={'text-white'}> Seller: {nft.seller}</p>
+                                                        <p className={'text-white'}> Token ID: {nft.tokenId}</p>
+                                                        <p className={'text-white'}> Sold: {nft.sold}</p>
                                                     </div>
 
                                                 </div>
