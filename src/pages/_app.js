@@ -11,8 +11,13 @@ function Marketplace({Component, pageProps}) {
                     <h1 className="text-dark text-center">Endless Domain</h1>
                     <div className="mt-4 p-2">
                         <Link href="/"
+                              className="btn btn-light p-3 mx-1">
+                            Market
+
+                        </Link>
+                        <Link href="/marketplace"
                               className="btn btn-dark p-3 mx-1">
-                            Market Place
+                            Buy NFT
 
                         </Link>
                         <Link href="/create-item"

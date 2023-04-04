@@ -18,7 +18,7 @@ contract NFTMarket is ReentrancyGuard {
     constructor() {
         owner = payable(msg.sender);
     }
-    //--------------------------------market item stock
+    //-------------------------------- market item stock
     struct MarketItem {
         uint itemId;
         address nftContract;
@@ -29,7 +29,6 @@ contract NFTMarket is ReentrancyGuard {
         bool sold;
         bool canceled;
     }
-
     mapping(uint256 => MarketItem) private idToMarketItem;
 
     event MarketItemCreated (
@@ -90,22 +89,40 @@ contract NFTMarket is ReentrancyGuard {
     }
 
     //allows someone to resell a token they have purchased
-    function resellToken(
-        uint256 tokenId,
-        address nftContract,
-        uint256 price)
-    public payable {
-        require(idToMarketItem[tokenId].owner == msg.sender, "Only item owner can perform this operation");
-        require(msg.value == listingPrice, "Price must be equal to listing price");
+//    function resellToken(
+//        uint256 tokenId,
+//        address nftContract,
+//        uint256 price)
+//    public payable {
+//        require(idToMarketItem[tokenId].owner == msg.sender, "Only item owner can perform this operation");
+//        require(msg.value == listingPrice, "Price must be equal to listing price");
+//
+//        idToMarketItem[tokenId].sold = false;
+//        idToMarketItem[tokenId].price = price;
+//        idToMarketItem[tokenId].seller = payable(msg.sender);
+//        idToMarketItem[tokenId].owner = payable(address(this));
+//        _itemsSold.decrement();
+//        IERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
+//    }
 
+    function resellToken(address nftContract, uint256 marketItemId, uint256 price) public payable nonReentrant {
+        uint256 tokenId = idToMarketItem[marketItemId].tokenId;
+        uint256 itemId = idToMarketItem[marketItemId].tokenId;
+        require(tokenId > 0, "Market item has to exist");
+
+        require(idToMarketItem[tokenId].seller == msg.sender, "You are not the seller");
+        //------------------------------------------market item
+        idToMarketItem[itemId].itemId = itemId;
+        idToMarketItem[tokenId].seller = payable(msg.sender);
+        idToMarketItem[tokenId].tokenId = tokenId;
+        idToMarketItem[tokenId].canceled = false;
         idToMarketItem[tokenId].sold = false;
         idToMarketItem[tokenId].price = price;
-        idToMarketItem[tokenId].seller = payable(msg.sender);
         idToMarketItem[tokenId].owner = payable(address(this));
-        _itemsSold.decrement();
         IERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
     }
-    /* cancel your nft from sale of a marketplace item */
+
+    /* remove your nft from sale of a marketplace item */
 /*    function cancelSellOrder(uint256 tokenId) external {
         // Cancel the sell order
 //        require(idToMarketItem[tokenId].sold == true, "Sell order does not exist");
@@ -121,12 +138,9 @@ contract NFTMarket is ReentrancyGuard {
         require(tokenId > 0, "Market item has to exist");
 
         require(idToMarketItem[marketItemId].seller == msg.sender, "You are not the seller");
-
         IERC721(nftContract).transferFrom(address(this), msg.sender, tokenId);
-
         idToMarketItem[marketItemId].owner = payable(msg.sender);
         idToMarketItem[marketItemId].canceled = true;
-
         _tokensCanceled.increment();
     }
     /* -------------sending nft to buyer and ransfer matic to seller  */
@@ -153,14 +167,32 @@ contract NFTMarket is ReentrancyGuard {
 
 
 
-
-
     /* ---------------- this  function to return all unsold market nfts */
     function fetchMarketItems() public view returns (MarketItem[] memory) {
         uint itemCount = _itemIds.current();
+           uint256 canceledItemsCount = _tokensCanceled.current();
+        uint256 soldItemsCount = _itemsSold.current();
+        uint unsoldItemCount = _itemIds.current() - soldItemsCount- canceledItemsCount;
+        uint currentIndex = 0;
+
+        MarketItem[] memory items = new MarketItem[](unsoldItemCount);
+        for (uint i = 0; i < itemCount; i++) {
+            if (idToMarketItem[i + 1].owner == address(0)) {
+                uint currentId = i + 1;
+                MarketItem storage currentItem = idToMarketItem[currentId];
+                items[currentIndex] = currentItem;
+                currentIndex += 1;
+            }
+        }
+        return items;
+    }
+
+    /* ---------------- anand this  function to return all unsold market nfts */
+    function fetchAllMarketItems() public view returns (MarketItem[] memory) {
+        uint itemCount = _itemIds.current();
         uint256 canceledItemsCount = _tokensCanceled.current();
         uint256 soldItemsCount = _itemsSold.current();
-        uint unsoldItemCount = _itemIds.current() - soldItemsCount - canceledItemsCount;
+        uint unsoldItemCount = _itemIds.current() - soldItemsCount- canceledItemsCount;
         uint currentIndex = 0;
 
         MarketItem[] memory items = new MarketItem[](unsoldItemCount);
@@ -199,7 +231,7 @@ contract NFTMarket is ReentrancyGuard {
         }
         return items;
     }
-    /* This function Returns (return total nft by owner listed) only nfts a owner (user) has created in his matic chain */
+    /* personal address This function Returns (return total nft by owner listed) only nfts a owner (user) has created in his matic chain */
     function fetchItemsCreated() public view returns (MarketItem[] memory) {
         uint totalItemCount = _itemIds.current();
         uint itemCount = 0;

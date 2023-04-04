@@ -88,19 +88,23 @@ const ReSell = () => {
     }
 
     async function listNFTForSale() {
-        if (!price) return
+        if (!formInput.price) return
         const web3Modal = new Web3Modal()
         const connection = await web3Modal.connect()
         const provider = new ethers.providers.Web3Provider(connection)
         const signer = provider.getSigner()
+        const price = ethers.utils.parseUnits(formInput.price, 'ether')
+        let contract = new ethers.Contract(nftmarketaddress, Market.abi, signer)
+        let listingPrice = await contract.getListingPrice()
+        listingPrice = listingPrice.toString()
 
-         let contract = new ethers.Contract(nftmarketaddress, Market.abi, signer)
-         let listingPrice = await contract.getListingPrice()
-         listingPrice = listingPrice.toString()
-        let transaction = await contract.resellToken(currentItem.tokenId,nftaddress,
+        let transaction = await contract.resellToken(
+            nftaddress,
+            currentItem.tokenId,
+            price,
             {value: listingPrice})
        await transaction.wait()
-        router.push('/')
+        router.push('/marketplace')
     }
 
     // ---------------./

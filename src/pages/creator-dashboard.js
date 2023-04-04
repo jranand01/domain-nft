@@ -69,31 +69,11 @@ export default function CreatorDashboard() {
         const provider = new ethers.providers.Web3Provider(connection)
         const signer = provider.getSigner()
         const contract = new ethers.Contract(nftmarketaddress, Market.abi, signer)
-        console.log ("Your debug message == " + nft.tokenId);
-        // let listingPrice = await contract.getListingPrice()
-        // listingPrice = listingPrice.toString()
-         // const price = ethers.utils.parseUnits(nft.price.toString(), 'ether')
-        // const cancelnft = await contract.cancelSellOrder(nft.owner,nft.tokenId)
+        // console.log ("Your debug message == " + nft.tokenId);
         const cancelnft = await contract.cancelSellOrder(nftaddress,nft.tokenId);
         await cancelnft.wait()
-         router.push('/creator-dashboard')
+         window.location.reload('/creator-dashboard')
     }
-    async function handleCancel() {
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
-
-        const nftContract = new ethers.Contract(
-            MyNFT.address,
-            MyNFT.abi,
-            signer
-        );
-
-        const cancelTx = await nftContract.cancel(nftId);
-
-        await cancelTx.wait();
-    }
-
-
 
 
     if (loadingState === 'loaded' && !nfts.length) return (
