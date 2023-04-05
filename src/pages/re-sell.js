@@ -104,7 +104,7 @@ const ReSell = () => {
             price,
             {value: listingPrice})
        await transaction.wait()
-        router.push('/marketplace')
+        router.push('/')
     }
 
     // ---------------./
@@ -132,8 +132,8 @@ const ReSell = () => {
                                         <div className="p-1">
                                             <h2 className={'text-white'}>{nft.name}</h2>
                                             <p className="text-white">{nft.description}</p>
-                                            <p className="text-white">{nft.tokenUri}</p>
-                                            <p className="text-white">{nft.tokenId}</p>
+                                            <p className={'text-white'}>Owner: {nft.owner}</p>
+                                            <p className={'text-white'}> Seller: {nft.seller}</p>
                                         </div>
                                         <div className=" p-3 bg-dark  ">
                                             <div className={'col'}>
@@ -180,14 +180,15 @@ const ReSell = () => {
                                         <p className="text-white">{currentItem.description}</p>
                                     </div>
                                     <div className="p-3 bg-dark row">
-                                        <div className={'col'}><p className="text-2xl font-bold text-white">Current
-                                            Price - {currentItem.price} Eth</p>
+                                        <div className={'col'}><h5 className=" font-bold text-white">Current
+                                            Price - {currentItem.price} Eth</h5>
                                         </div>
 
                                         <br/>
-                                        <form className={''} action={''}><input type={'number'} className={'p-1'}
+                                        <form className={''} action={''}><input type={'number'} className={'p-3'}
                                                                                 onChange={e => updateFormInput({...formInput, price: e.target.value})}
                                                                                 value={formInput.price}
+                                                                                required
                                                                                 placeholder={'new price ETH'} name="price"/></form>
                                         <h2 className="text-2xl font-bold text-primary p-3">New Price for
                                             sell- <span className={'text-white'}> {formInput.price} Eth</span></h2>
@@ -202,24 +203,12 @@ const ReSell = () => {
                     <Button variant="secondary" onClick={handleClose}>
                         Cancel
                     </Button>
-                    <Button variant="primary" onClick={listNFTForSale}>Publish</Button>
+                    <Button variant="primary btn btn-lg" onClick={listNFTForSale}>Publish NFT Now</Button>
                 </Modal.Footer>
             </Modal>
 
             {/*--------------./ resell popup end*/}
-            <div className={'container'}>
-                <br/>
-                <h4>Discussion topics</h4>
-                <h5>
-                    <ul className={'text-secondary'}>
-                        <li>Get data from multiple web3 domain provider to list out NFt Domain on our platform.</li>
-                        <li>What are Re-sell options and prices modification for your Domain NFTs.</li>
-                        <li>Fixed price, Auction/Biding domains.</li>
-                        <li>Clear User flow for listing domain, re-sell,buy etc.</li>
-                        <li>We need complete work flow for this application phase 1 point by point.</li>
-                    </ul>
-                </h5>
-            </div>
+
             <div className={'bg-white p-5'}> © Copyright 2023. All Rights Reserved. Anand Ujan Code web3</div>
         </>
     );

@@ -77,6 +77,8 @@ export default function MyAssets() {
                                     <div className="p-1">
                                         <h2 className={'text-white'}>{nft.name}</h2>
                                         <p className="text-white">{nft.description}</p>
+                                        <p className={'text-white'}>Owner: {nft.owner}</p>
+                                        <p className={'text-white'}> Seller: {nft.seller}</p>
                                     </div>
                                     <div className="p-4 bg-success">
                                         <p className="text-2xl font-bold text-white">Price </p>

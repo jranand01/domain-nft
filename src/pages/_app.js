@@ -9,17 +9,18 @@ function Marketplace({Component, pageProps}) {
             <div className={'container'}>
                 <nav className="p-6">
                     <h1 className="text-dark text-center">Endless Domain</h1>
+                    <hr/>
                     <div className="mt-4 p-2">
                         <Link href="/"
-                              className="btn btn-light p-3 mx-1">
-                            Market
+                              className="btn btn-danger p-3 mx-1">
+                            Market Place
 
                         </Link>
-                        <Link href="/marketplace"
-                              className="btn btn-dark p-3 mx-1">
-                            Buy NFT
+                        {/*<Link href="/marketplace"*/}
+                        {/*      className="btn btn-dark p-3 mx-1">*/}
+                        {/*    Buy NFT*/}
 
-                        </Link>
+                        {/*</Link>*/}
                         <Link href="/create-item"
                               className="btn btn-dark p-3 mx-1">
                             Create Sell
@@ -40,11 +41,11 @@ function Marketplace({Component, pageProps}) {
                             Re-sale
 
                         </Link>
-                        <Link href="/resell-test"
-                              className="btn btn-warning p-3 mx-1">
-                            Re-sale-Test
+                        {/*<Link href="/resell-test"*/}
+                        {/*      className="btn btn-warning p-3 mx-1">*/}
+                        {/*    Re-sale-Test*/}
 
-                        </Link>
+                        {/*</Link>*/}
                     </div>
                 </nav>
             </div>

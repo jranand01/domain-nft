@@ -54,7 +54,7 @@ export default function CreatorDashboard() {
             return item
         }))
         /* create a filtered array of items that have been sold */
-        const soldItems = items.filter(i => i.sold & i.canceled)
+        const soldItems = items.filter(i => i.sold)
         const unSoldItems = items.filter(i => !i.sold && !i.canceled)
         setSold(soldItems)
         setUnSold(unSoldItems)
@@ -107,8 +107,8 @@ export default function CreatorDashboard() {
                                                         <div className="p-1">
                                                             <h2 className={'text-white'}>{nft.name}</h2>
                                                             <p className="text-white">{nft.description}</p>
-                                                            {/*<p className={'text-white'}>Owner: {nft.owner}</p>*/}
-                                                            {/*<p className={'text-white'}> Seller: {nft.seller}</p>*/}
+                                                            <p className={'text-white'}>Owner: {nft.owner}</p>
+                                                            <p className={'text-white'}> Seller: {nft.seller}</p>
                                                         </div>
 
                                                     </div>
@@ -147,8 +147,8 @@ export default function CreatorDashboard() {
                                         <div className="p-1">
                                             <h2 className={'text-white'}>{nft.name}</h2>
                                             <p className="text-white">{nft.description}</p>
-                                           {/* <p className={'text-white'}>Owner: {nft.owner}</p>*/}
-                                           {/*<p className={'text-white'}> Seller: {nft.seller}</p>*/}
+                                            <p className={'text-white'}>Owner: {nft.owner}</p>
+                                           <p className={'text-white'}> Seller: {nft.seller}</p>
                                         </div>
 
                                     </div>
@@ -186,8 +186,8 @@ export default function CreatorDashboard() {
                                                     <div className="p-1">
                                                         <h2 className={'text-white'}>{nft.name}</h2>
                                                         <p className="text-white">{nft.description}</p>
-                                                        {/*<p className={'text-white'}>Owner: {nft.owner}</p>*/}
-                                                        {/*<p className={'text-white'}> Seller: {nft.seller}</p>*/}
+                                                        <p className={'text-white'}>Owner: {nft.owner}</p>
+                                                        <p className={'text-white'}> Seller: {nft.seller}</p>
                                                     </div>
 
                                                 </div>
