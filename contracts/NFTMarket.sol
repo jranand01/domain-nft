@@ -4,27 +4,28 @@ pragma solidity ^0.8.18;
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
 
-contract NFTMarket is ReentrancyGuard {
+contract NFTMarket is ReentrancyGuard,ERC721URIStorage {
     using Counters for Counters.Counter;
     Counters.Counter private _itemIds;
     Counters.Counter private _itemsSold;
     Counters.Counter private _tokensCanceled;
 
-    address contractAddress;
 
-
+    address public  marketOwner;
     address payable owner;
+    uint public sellFeePercentage; // Sell fee percentage
+
     uint256 listingPrice = 0.025 ether;
 
-    constructor() {
+    constructor() ERC721("Endless", "NFTS") {
         owner = payable(msg.sender);
-
+        sellFeePercentage = 15; // Set the initial sell fee percentage to 15%
+        marketOwner = 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC;
     }
-
-
-    //-------------------------------- market item stock
+//-------------------------------- market item stock
     struct MarketItem {
         uint itemId;
         address nftContract;
@@ -49,6 +50,7 @@ contract NFTMarket is ReentrancyGuard {
         bool canceled
     );
 
+
     /* ---------------------------Returns the market listing price of the nft contract */
 
     function getListingPrice() public view returns (uint256) {
@@ -59,6 +61,21 @@ contract NFTMarket is ReentrancyGuard {
         require(owner == msg.sender, "Only marketplace owner can update listing price.");
         listingPrice = _listingPrice;
     }
+    // Function to set the sell fee percentage
+//    function setSellFeePercentage(uint percentage) public {
+//        require(msg.sender == marketOwner, "Only the owner can set the sell fee percentage");
+//        sellFeePercentage = percentage;
+//    }
+
+
+    // Function to calculate the sell fee
+    function calculateSellFee(uint amount) public view returns (uint) {
+        return amount * sellFeePercentage / 100;
+    }
+
+
+
+
     /* put places an item for sale on the nft marketplace */
     function createMarketItem(
         address nftContract,
@@ -97,15 +114,19 @@ contract NFTMarket is ReentrancyGuard {
 
     //=========@anand_code allows someone to resell a token they have purchased
     function resellToken(address nftContract, uint256 marketItemId, uint256 price) public payable nonReentrant {
-        uint256 tokenId = idToMarketItem[marketItemId].tokenId;
         uint256 itemId = idToMarketItem[marketItemId].tokenId;
+        uint256 tokenId = itemId;
         require(tokenId > 0, "Market item has to exist");
+        require(idToMarketItem[tokenId].owner == msg.sender, "Only item owner can resell NFTs");
 
-        require(idToMarketItem[tokenId].owner == msg.sender, "You are not the seller");
-        //------------------------------------------market item
+        IERC721(nftContract).approve(owner, tokenId);
+        /* allows someone to resell a token they have purchased */
+        setApprovalForAll(owner, true);
+        //------------------------------------------resell market item
         idToMarketItem[itemId].itemId = itemId;
         idToMarketItem[tokenId].tokenId = tokenId;
         idToMarketItem[tokenId].canceled = false;
+
         idToMarketItem[tokenId].sold = false;
         idToMarketItem[tokenId].price = price;
         idToMarketItem[tokenId].seller = payable(msg.sender);
@@ -113,6 +134,17 @@ contract NFTMarket is ReentrancyGuard {
 
         IERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
         _tokensCanceled.decrement();
+        emit MarketItemCreated(
+            itemId,
+            nftContract,
+            tokenId,
+            msg.sender,
+            address(this),
+            price,
+            false,
+            false
+        );
+
     }
 
     /* remove your nft from sale of a marketplace item */
@@ -146,14 +178,17 @@ contract NFTMarket is ReentrancyGuard {
     ) public payable nonReentrant {
         uint price = idToMarketItem[itemId].price;
         uint tokenId = idToMarketItem[itemId].tokenId;
+        // Calculate the sell fee
+        uint sellFee = calculateSellFee(idToMarketItem[itemId].price);
         require(msg.value == price, "Please submit the asking price in order to complete the purchase");
 
-        idToMarketItem[itemId].seller.transfer(msg.value);
+        // Send the sell fee to the marketplace owner
+        payable(marketOwner).transfer(sellFee);
+        idToMarketItem[itemId].seller.transfer(msg.value-sellFee);
         IERC721(nftContract).transferFrom(address(this), msg.sender, tokenId);
         idToMarketItem[itemId].owner = payable(msg.sender);
         idToMarketItem[itemId].sold = true;
         _itemsSold.increment();
-        //        _transfer(address(this), msg.sender, tokenId);
         payable(owner).transfer(listingPrice);
     }
 
@@ -161,26 +196,6 @@ contract NFTMarket is ReentrancyGuard {
 
     /* ---------------- this  function to return all unsold market nfts */
     function fetchMarketItems() public view returns (MarketItem[] memory) {
-        uint itemCount = _itemIds.current();
-        uint256 canceledItemsCount = _tokensCanceled.current();
-        uint256 soldItemsCount = _itemsSold.current();
-        uint unsoldItemCount = _itemIds.current() - soldItemsCount - canceledItemsCount;
-        uint currentIndex = 0;
-
-        MarketItem[] memory items = new MarketItem[](unsoldItemCount);
-        for (uint i = 0; i < itemCount; i++) {
-            if (idToMarketItem[i + 1].owner == address(0) || idToMarketItem[i + 1].owner == address(this)) {
-                uint currentId = i + 1;
-                MarketItem storage currentItem = idToMarketItem[currentId];
-                items[currentIndex] = currentItem;
-                currentIndex += 1;
-            }
-        }
-        return items;
-    }
-
-    /* ---------------- anand this  function to return all unsold market nfts */
-    function ujanfetchAllMarketItems() public view returns (MarketItem[] memory) {
         uint itemCount = _itemIds.current();
         uint256 canceledItemsCount = _tokensCanceled.current();
         uint256 soldItemsCount = _itemsSold.current();
