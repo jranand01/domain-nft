@@ -2,7 +2,7 @@
 
 //=========rpc https://rpc-mumbai.maticvigil.com/
 require("@nomiclabs/hardhat-waffle")
-const fs = require("fs")
+const fs= require("fs")
 const privateKey = fs.readFileSync(".secret").toString()
 const projectId = "1ee87a9a45ee44ef941f7e214bd2886a"
 

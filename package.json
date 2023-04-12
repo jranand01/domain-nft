@@ -32,6 +32,12 @@
     "web3modal": "^1.9.12"
   },
   "devDependencies": {
-    "ethers": "^5.7.2"
+    "ethers": "^5.7.2",
+    "web3": "^1.9.0"
+  },
+  "browser": {
+    "fs": false,
+    "os": false,
+    "path": false
   }
 }
