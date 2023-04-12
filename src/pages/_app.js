@@ -1,11 +1,16 @@
+import React, {useEffect, useState} from 'react'
+import Link from "next/link";
+import { ConnectWallet, useAddress ,ThirdwebProvider} from "@thirdweb-dev/react";
 import '@/styles/globals.css'
 import 'bootstrap/dist/css/bootstrap.css';
-import React from "react";
-import Link from "next/link";
 
 function Marketplace({Component, pageProps}) {
+
+    const desiredChainId = 80001;
+    const address = useAddress();
+    // const{connectWalletaddress, setconnectWalletaddress} = useState(null);
     return (
-        <div>
+        <ThirdwebProvider desiredChainId={desiredChainId}>
             <div className={'container'}>
                 <nav className="p-6">
                     <h1 className="text-dark text-center">Endless Domain</h1>
@@ -44,18 +49,28 @@ function Marketplace({Component, pageProps}) {
                         {/*<Link href="/resell-test"*/}
                         {/*      className="btn btn-warning p-3 mx-1">*/}
                         {/*    Re-sale-Test*/}
+                        {/* Predefined button  */}
 
-                        {/*</Link>*/}
+                        <ConnectWallet
+                            theme="light"
+                            address
+                            className={'btn btn-primary btn-lg '}
+                        />
+
+                        {/*Address: <span>{address}</span>*/}
+
+
+
+
                     </div>
                 </nav>
             </div>
             <Component {...pageProps} />
             <div className={'container'}>
                 <br/>
-
             </div>
 
-        </div>
+        </ThirdwebProvider>
 
     )
 }
