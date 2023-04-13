@@ -10,7 +10,8 @@ const Codetest = () => {
 
     async function main() {
         const web3Modal = await new Web3Modal()
-        const contractABI =[{"inputs":[{"internalType":"address","name":"_logic","type":"address"},{"internalType":"bytes","name":"_data","type":"bytes"}],"stateMutability":"payable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"previousAdmin","type":"address"},{"indexed":false,"internalType":"address","name":"newAdmin","type":"address"}],"name":"AdminChanged","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"beacon","type":"address"}],"name":"BeaconUpgraded","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"implementation","type":"address"}],"name":"Upgraded","type":"event"},{"stateMutability":"payable","type":"fallback"},{"stateMutability":"payable","type":"receive"}];
+        const contractABI =[{"inputs":[{"internalType":"address","name":"_logic","type":"address"},{"internalType":"bytes","name":"_data","type":"bytes"}],"stateMutability":"payable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"previousAdmin","type":"address"},{"indexed":false,"internalType":"address","name":"newAdmin","type":"address"}],"name":"AdminChanged","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"beacon","type":"address"}],"name":"BeaconUpgraded","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"implementation","type":"address"}],"name":"Upgraded","type":"event"},{"stateMutability":"payable","type":"fallback"},{"stateMutability":"payable","type"
+                :"receive"}];
         const contractAddress = '0x6339e5E072086621540D0362C4e3Cea0d643E114';
 // create a new web3 instance
         //const web3 = new Web3(new Web3.providers.HttpProvider("https://polygon-mainnet.infura.io/v3/1ee87a9a45ee44ef941f7e214bd2886a"));
@@ -18,13 +19,23 @@ const Codetest = () => {
 
         const connection = await web3Modal.connect('https://polygon-mainnet.infura.io/v3/1ee87a9a45ee44ef941f7e214bd2886a')
         const provider =  new ethers.providers.Web3Provider(connection)
+
+
+
 // create a contract instance using the contract ABI and contract address
         //const contractInstance =  new  web3.eth.Contract(contractABI, contractAddress);
         const contractInstance = new ethers.Contract(contractAddress, contractABI, provider);
-
+console.log(contractInstance.address)
+console.log(contractInstance.resolvedAddress)
+console.log('======================up out')
+        //owner wallet address:     0x7Ab0d3D9fe0D7C0b8c6DcfA0eb4bB3ca44f5f298
         // retrieve the total number of NFTs minted on the original platform
-        const totalSupply = await contractInstance.methods.totalSupply().call();
-        //const totalSupply = Number(await contractInstance.methods.balanceOf().call())
+        //const totalSupply = await contractInstance.methods.totalSupply().call();
+
+        const totalSupply2 = await contractInstance.methods.totalSupply().call();
+        const totalSupply = parseInt(totalSupply2);
+
+
         // loop through all the NFTs and retrieve their information
         for (let i = 0; i < totalSupply; i++) {
             // retrieve the NFT ID
