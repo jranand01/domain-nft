@@ -46,11 +46,10 @@ function Marketplace({Component, pageProps}) {
                             Re-sale
 
                         </Link>
-                        {/*<Link href="/resell-test"*/}
-                        {/*      className="btn btn-warning p-3 mx-1">*/}
-                        {/*    Re-sale-Test*/}
-                        {/* Predefined button  */}
-
+                        <Link href="/codetest"
+                              className="btn btn-warning p-3 mx-1">
+                            Load Domain
+                        </Link>
                         <ConnectWallet
                             theme="light"
                             address
