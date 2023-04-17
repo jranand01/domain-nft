@@ -108,11 +108,11 @@ export default function CreateItem() {
                 </div>
                 <div className="col-6 py-2">
                     <p>NFT Description </p>
-                        <textarea
-                            placeholder="NFT Description"
-                            className="form-control"
-                            onChange={e => updateFormInput({...formInput, description: e.target.value})}
-                        />
+                    <textarea
+                        placeholder="NFT Description"
+                        className="form-control"
+                        onChange={e => updateFormInput({...formInput, description: e.target.value})}
+                    />
                 </div>
                 <div className="col-6 py-2">
                     <div className="custom-file">
