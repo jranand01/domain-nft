@@ -119,7 +119,7 @@ contract NFTMarket is ReentrancyGuard,ERC721URIStorage {
         require(tokenId > 0, "Market item has to exist");
         require(idToMarketItem[tokenId].owner == msg.sender, "Only item owner can resell NFTs");
 
-        IERC721(nftContract).approve(owner, tokenId);
+//        IERC721(nftContract).approve(owner, tokenId);
         /* allows someone to resell a token they have purchased */
         setApprovalForAll(owner, true);
         //------------------------------------------resell market item

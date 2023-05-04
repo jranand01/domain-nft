@@ -13,7 +13,11 @@ function Marketplace({Component, pageProps}) {
         <ThirdwebProvider desiredChainId={desiredChainId}>
             <div className={'container'}>
                 <nav className="p-6">
-                    <h1 className="text-dark text-center">Endless Domain</h1>
+                    <div>
+                        <img src={"https://www.endlessdomains.io/_next/image?url=%2Flogo%2Fblack-logo%2Fblack-logo2x.png&w=256&q=75"}/>
+                        <h1 className="text-dark text-center">Endless Domain Marketplace</h1>
+                    </div>
+
                     <hr/>
                     <div className="mt-4 p-2">
                         <Link href="/"
@@ -49,6 +53,10 @@ function Marketplace({Component, pageProps}) {
                         <Link href="/codetest"
                               className="btn btn-warning p-3 mx-1">
                             Load Domain
+                        </Link>
+                        <Link href="/uddomain"
+                              className="btn btn-warning p-3 mx-1">
+                           UD domain test fetch
                         </Link>
                         <ConnectWallet
                             theme="light"
