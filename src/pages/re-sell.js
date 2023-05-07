@@ -59,9 +59,9 @@ const ReSell = () => {
         setCurrentItem(nfts[i])
     }
 
-/*    useEffect(()=>{
-        updateFormInput
-    },[currentItem])*/
+    /*    useEffect(()=>{
+            updateFormInput
+        },[currentItem])*/
 
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
@@ -88,22 +88,18 @@ const ReSell = () => {
     }
 
     async function listNFTForSale() {
-        if (!formInput.price) return
+        if (!price) return
         const web3Modal = new Web3Modal()
         const connection = await web3Modal.connect()
         const provider = new ethers.providers.Web3Provider(connection)
         const signer = provider.getSigner()
-        const price = ethers.utils.parseUnits(formInput.price, 'ether')
+
+        const price2 = ethers.utils.parseUnits(formInput.price, 'ether')
         let contract = new ethers.Contract(nftmarketaddress, Market.abi, signer)
         let listingPrice = await contract.getListingPrice()
         listingPrice = listingPrice.toString()
-
-        let transaction = await contract.resellToken(
-            nftaddress,
-            currentItem.tokenId,
-            price,
-            {value: listingPrice})
-       await transaction.wait()
+        let transaction = await contract.resellToken(currentItem.tokenId,nftaddress, {value: listingPrice})
+        await transaction.wait()
         router.push('/')
     }
 
@@ -132,8 +128,8 @@ const ReSell = () => {
                                         <div className="p-1">
                                             <h2 className={'text-white'}>{nft.name}</h2>
                                             <p className="text-white">{nft.description}</p>
-                                            <p className={'text-white'}>Owner: {nft.owner}</p>
-                                            <p className={'text-white'}> Seller: {nft.seller}</p>
+                                            <p className="text-white">{nft.tokenUri}</p>
+                                            <p className="text-white">{nft.tokenId}</p>
                                         </div>
                                         <div className=" p-3 bg-dark  ">
                                             <div className={'col'}>
@@ -180,15 +176,16 @@ const ReSell = () => {
                                         <p className="text-white">{currentItem.description}</p>
                                     </div>
                                     <div className="p-3 bg-dark row">
-                                        <div className={'col'}><h5 className=" font-bold text-white">Current
-                                            Price - {currentItem.price} Eth</h5>
+                                        <div className={'col'}><p className="text-2xl font-bold text-white">Current
+                                            Price - {currentItem.price} Eth</p>
                                         </div>
-
+                                        <div className={'col'}>
+                                            <button className={'btn btn-danger'}> Pause sell</button>
+                                        </div>
                                         <br/>
-                                        <form className={''} action={''}><input type={'number'} className={'p-3'}
+                                        <form className={''} action={''}><input type={'number'} className={'p-1'}
                                                                                 onChange={e => updateFormInput({...formInput, price: e.target.value})}
                                                                                 value={formInput.price}
-                                                                                required
                                                                                 placeholder={'new price ETH'} name="price"/></form>
                                         <h2 className="text-2xl font-bold text-primary p-3">New Price for
                                             sell- <span className={'text-white'}> {formInput.price} Eth</span></h2>
@@ -203,7 +200,7 @@ const ReSell = () => {
                     <Button variant="secondary" onClick={handleClose}>
                         Cancel
                     </Button>
-                    <Button variant="primary btn btn-lg" onClick={listNFTForSale}>Publish NFT Now</Button>
+                    <Button variant="primary" onClick={listNFTForSale}>Publish</Button>
                 </Modal.Footer>
             </Modal>
 

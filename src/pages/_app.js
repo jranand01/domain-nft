@@ -50,14 +50,14 @@ function Marketplace({Component, pageProps}) {
                             Re-sale
 
                         </Link>
-                        <Link href="/codetest"
+                        <Link href="/myassets"
                               className="btn btn-warning p-3 mx-1">
-                            Load Domain
+                            My Assets
                         </Link>
-                        <Link href="/uddomain"
-                              className="btn btn-warning p-3 mx-1">
-                           UD domain test fetch
-                        </Link>
+                        {/*<Link href="/uddomain"*/}
+                        {/*      className="btn btn-warning p-3 mx-1">*/}
+                        {/*   UD domain test fetch*/}
+                        {/*</Link>*/}
                         <ConnectWallet
                             theme="light"
                             address
