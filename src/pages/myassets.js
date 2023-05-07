@@ -36,7 +36,10 @@ const Index = () => {
                     //apiKey:"LR4MaImuhPwERyz5wRbu1nucPAS7OpTRNUmN8NBvS0NkxTsbyZ2z2BVPnjr5F9Ve",
                     //apiKey:"EoTGJXXlB7tkZDGHZPYIM6W6o5azMMfCud95GdMEGN8BKB9lW90KuttG8FBp3a4M",
                     //apiKey: "KdjkU96qdEJYq1rawMj8rA7yxnDbqlJmM8OABLYhxYYkKP1HJnjPrCMlnT72U6pa",
-                    apiKey: "nXdL5qBg2eRqrGMNKGPVwSx03qA9f25hhklyoH3FEnB115PyleGkbVAPZHAVjMcu",
+                    //apiKey: "nXdL5qBg2eRqrGMNKGPVwSx03qA9f25hhklyoH3FEnB115PyleGkbVAPZHAVjMcu",
+                    //apiKey: "4bgfzTMcyFlZoKOUyL6mzEVzy7dHRHc1mMXKxyk4Woc5vy62Dju2HFgGxJRglVQ2",
+                    apiKey: "o51apwdpAy9uwovgBotIisyFSTR3N8zXW1ncHotAGNdj5mIY45OiQaa6fJfx49xU",
+
 
                     // ...and any other configuration
                 });
@@ -44,7 +47,6 @@ const Index = () => {
             const allNFTsResult = [];
             const allNFTs = [];
 
-            // const address = waddress;
             const address = waddress;
             //const address = "0x5bba9780a85979af73d43cef8cce9aea330677ec";
             //const address = "0xe7C161519b315AE58f42f3B1709F42aE9A34A9E0";
@@ -76,8 +78,8 @@ const Index = () => {
         <>
             {/*<span>My wallet Address: {waddress}</span>*/}
             <div className="container">
-                <p className={'text-danger'}>Note: Please connect your main wallet address first to list your NFTs. </p>
-                <h2 className="text-2xl py-2"> My NFTs Assets (2)</h2>
+                <p className={'text-danger'}>Note: Please connect your main wallet address first to list your NFTs. </p><p className={'text-danger'}>Chain: POLYGON,ETHEREUM,Binance</p>
+                <h2 className="text-2xl py-2"> My NFTs Assets ( )</h2>
                 <div className={'row'}>
                     {
                         nfts.map((n, j) => (
