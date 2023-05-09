@@ -28,15 +28,20 @@ const Index = () => {
         const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider)
         const marketContract = new ethers.Contract(nftmarketaddress, Market.abi, provider)
         const data = await marketContract.fetchMarketItems()
-
         const items = await Promise.all(data.map(async i => {
             const tokenUri = await tokenContract.tokenURI(i.tokenId)
-            const meta = await axios.get(tokenUri)
+            const meta = await axios.get(tokenUri, {
+                headers: {
+                    Accept: "application/json",
+
+                }
+            })
             let price = ethers.utils.formatUnits(i.price.toString(), 'ether')
             let item = {
                 price,
                 itemId: i.itemId.toNumber(),
                 seller: i.seller,
+                canceled: i.canceled,
                 owner: i.owner,
                 image: meta.data.image,
                 name: meta.data.name,
@@ -100,6 +105,8 @@ const Index = () => {
                                         <div className="p-1">
                                             <h2 className={'text-white'}>{nft.name}</h2>
                                             <p className="text-white">{nft.description}</p>
+                                            <p className={'text-white'}>Owner: {nft.owner}</p>
+                                            <p className={'text-white'}> Seller: {nft.seller}</p>
                                         </div>
                                     </div>
                                     <div className={'footer'}>

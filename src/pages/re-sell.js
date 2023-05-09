@@ -59,9 +59,9 @@ const ReSell = () => {
         setCurrentItem(nfts[i])
     }
 
-/*    useEffect(()=>{
-        updateFormInput
-    },[currentItem])*/
+    /*    useEffect(()=>{
+            updateFormInput
+        },[currentItem])*/
 
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
@@ -94,12 +94,12 @@ const ReSell = () => {
         const provider = new ethers.providers.Web3Provider(connection)
         const signer = provider.getSigner()
 
-         const price2 = ethers.utils.parseUnits(formInput.price, 'ether')
-         let contract = new ethers.Contract(nftmarketaddress, Market.abi, signer)
-         let listingPrice = await contract.getListingPrice()
-         listingPrice = listingPrice.toString()
+        const price2 = ethers.utils.parseUnits(formInput.price, 'ether')
+        let contract = new ethers.Contract(nftmarketaddress, Market.abi, signer)
+        let listingPrice = await contract.getListingPrice()
+        listingPrice = listingPrice.toString()
         let transaction = await contract.resellToken(currentItem.tokenId,nftaddress, {value: listingPrice})
-       await transaction.wait()
+        await transaction.wait()
         router.push('/')
     }
 
@@ -205,19 +205,7 @@ const ReSell = () => {
             </Modal>
 
             {/*--------------./ resell popup end*/}
-            <div className={'container'}>
-                <br/>
-                <h4>Discussion topics</h4>
-                <h5>
-                    <ul className={'text-secondary'}>
-                        <li>Get data from multiple web3 domain provider to list out NFt Domain on our platform.</li>
-                        <li>What are Re-sell options and prices modification for your Domain NFTs.</li>
-                        <li>Fixed price, Auction/Biding domains.</li>
-                        <li>Clear User flow for listing domain, re-sell,buy etc.</li>
-                        <li>We need complete work flow for this application phase 1 point by point.</li>
-                    </ul>
-                </h5>
-            </div>
+
             <div className={'bg-white p-5'}> © Copyright 2023. All Rights Reserved. Anand Ujan Code web3</div>
         </>
     );
