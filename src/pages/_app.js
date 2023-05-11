@@ -3,11 +3,11 @@ import Link from "next/link";
 import { ConnectWallet, useAddress ,ThirdwebProvider} from "@thirdweb-dev/react";
 import '@/styles/globals.css'
 import 'bootstrap/dist/css/bootstrap.css';
-
+import {ethers} from "ethers";
 function Marketplace({Component, pageProps}) {
 
     const desiredChainId = 80001;
-    const address = useAddress();
+    const waddress = useAddress();
     // const{connectWalletaddress, setconnectWalletaddress} = useState(null);
     return (
         <ThirdwebProvider desiredChainId={desiredChainId}>
@@ -54,6 +54,10 @@ function Marketplace({Component, pageProps}) {
                               className="btn btn-warning p-3 mx-1">
                             My Assets
                         </Link>
+                        {/*<Link href={`/myassets-test/${waddress}`}*/}
+                        {/*      className="btn btn-warning p-3 mx-1">*/}
+                        {/*   Assets*/}
+                        {/*</Link>*/}
                         {/*<Link href="/uddomain"*/}
                         {/*      className="btn btn-warning p-3 mx-1">*/}
                         {/*   UD domain test fetch*/}
@@ -64,7 +68,7 @@ function Marketplace({Component, pageProps}) {
                             className={'btn btn-primary btn-lg '}
                         />
 
-                        {/*Address: <span>{address}</span>*/}
+
 
 
 

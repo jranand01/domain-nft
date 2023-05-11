@@ -9,12 +9,14 @@ import Modal from 'react-bootstrap/Modal';
 import Link from "next/link";
 import {Accordion} from "react-bootstrap";
 
-const Index = () => {
+const Index = ({data}) => {
     const values = [true];
-    const [nftCount, setNftcount] = useState(0);
+    const [nftCount, setNftcount] = useState(() => {
+        return data.reduce((total, arr) => total + arr.length, 0);
+    });
     const [fullscreen, setFullscreen] = useState(true);
     const [show, setShow] = useState(false);
-    const [nfts, setNfts] = useState([])
+    const [nfts, setNfts] = useState(data)
     const [selected_nfts, setSelected_nfts] = useState({})
     const handleShow2 = (j, i) => {
         setSelected_nfts(nfts[j][i])
@@ -25,79 +27,23 @@ const Index = () => {
         setFullscreen(breakpoint);
         setShow(true);
     }
-    const waddress = useAddress();
-    const runApp = async () => {
-        try {
-            if (!Moralis.Core.isStarted) {
-                await Moralis.start({
+    //const waddress = useAddress();
 
-                    apiKey: "4RU0eLSFjSgPQ18NT5BwzjYXgmpHrjNzUhRqXTTPnAscuwLAmnepyuv1Enuka5kz",
-                    //apiKey:"b4EmKq4fQf6VfnIUTGp1Y3kUawuQNLPOHmPIyTslv6J0jO0HGR60LDJRgnxMWOfb",
-                    //apiKey:"LR4MaImuhPwERyz5wRbu1nucPAS7OpTRNUmN8NBvS0NkxTsbyZ2z2BVPnjr5F9Ve",
-                    //apiKey:"EoTGJXXlB7tkZDGHZPYIM6W6o5azMMfCud95GdMEGN8BKB9lW90KuttG8FBp3a4M",
-                    //apiKey: "KdjkU96qdEJYq1rawMj8rA7yxnDbqlJmM8OABLYhxYYkKP1HJnjPrCMlnT72U6pa",
-                    //apiKey: "nXdL5qBg2eRqrGMNKGPVwSx03qA9f25hhklyoH3FEnB115PyleGkbVAPZHAVjMcu",
-                    //apiKey: "4bgfzTMcyFlZoKOUyL6mzEVzy7dHRHc1mMXKxyk4Woc5vy62Dju2HFgGxJRglVQ2",
+    /* const [appRun, setApprun] = useState(false)
+     useEffect(() => {
+         if (!appRun) {
+             nfts.map((nft, i) => {
+                 nft.map((n, j) => {
+                     getMetaData(n.token_uri).then(r => {
+                         n.metadata = r
+                     })
+                 })
+             })
+         }
 
-                    //apiKey: "o51apwdpAy9uwovgBotIisyFSTR3N8zXW1ncHotAGNdj5mIY45OiQaa6fJfx49xU",
-                    // apiKey: "PfTvLGgNhIVyt1fGaR4FD1XDq1xmKnAM204Y5A0TxXUnPjgQZVNXtcoIhFhdz1hu",
-                    // apiKey: "9VkTXlA8DUTnE2uUQu1vUdMpujtKcZVbjJcIFUUP4WOjADWwYMtzqbQFdUR3y8Ha",
-
-                    // ...and any other configuration
-                });
-            }
-            const allNFTsResult = [];
-            const allNFTs = [];
-
-            const address = waddress;
-            //const caddress = "0x5bba9780a85979af73d43cef8cce9aea330677ec";
-            //const address = "0xe7C161519b315AE58f42f3B1709F42aE9A34A9E0";
-            // const address = "0x5bbA9780a85979AF73D43CEf8CCE9Aea330677EC";
-            // const address = "0xd7dEa8a8864ec89Db0E310Ded5a174Eac3724643";
-            //const address = "0xB4778b0b44c635e9Ad453674D66C19fE828Ef45A";
-
-            const chains = [EvmChain.POLYGON, EvmChain.ETHEREUM, EvmChain.BSC];
-
-            for (const chain of chains) {
-                const response = await Moralis.EvmApi.nft.getWalletNFTs({
-                    address,
-                    chain,
-                });
-                allNFTs.push(response);
-            }
-
-            allNFTs.map((n) => {
-                let arr = [];
-                n.jsonResponse.result.map((a) => {
-                    if (a.token_uri) { //removing token with no token_uri
-                        if (a.symbol === "UD" || a.symbol === "ENS") { //Filtering only UD and ENS
-                            // a.metadata = getMetaData(a.token_uri)
-                            arr.push(a)
-                        }
-                    }
-                })
-                allNFTsResult.push(arr);
-                setNftcount(nftCount + Object.keys(arr).length);
-            })
-            setNfts(allNFTsResult)
-            console.log(allNFTsResult);
-            console.log(nftCount);
-        } catch (e) {
-            console.log(e)
-        }
-    }
-    const [appRun, setApprun] = useState(false)
-    useEffect(() => {
-        if (!appRun) {
-            runApp()
-        }
-        //count nfts
-        const count = nfts.reduce((total, arr) => total + arr.length, 0);
-        setNftcount(count)
-
-        setApprun(true)
-        // addMetadata()
-    }, [nfts])
+         setApprun(true)
+         // addMetadata()
+     }, [nfts])*/
     const getMetaData = async (token_uri) => {
         const response = await axios.get(token_uri, {
             'headers': {
@@ -114,9 +60,9 @@ const Index = () => {
         <>
             {/*<span>My wallet Address: {waddress}</span>*/}
             <div className="container">
-                <h6 className={'text-dark'}>Note: Please connect your main wallet address first to list your NFTs. </h6>
+                <h6 className={'text-dark'}>Note: Please connect your main wallet address first to list your
+                    NFTs. </h6>
                 <h5 className={'text-dark'}>Chain: POLYGON,ETHEREUM,Binance</h5>
-
                 <h2 className="text-2xl py-2"> My NFTs Assets ({nftCount})</h2>
                 <div className={'row'}>
                     {nfts && (
@@ -128,7 +74,8 @@ const Index = () => {
                                             <div className={'card h-100'}>
                                                 <div className={'card-body bg-light'}>
                                                     <div className={'card  ratio ratio-4x3'}>
-                                                        <img src={JSON.parse(nft.metadata).image} className={'card-img '}
+                                                        <img src={JSON.parse(nft.metadata).image}
+                                                             className={'card-img '}
                                                              alt={'NFT Image'}/>
                                                     </div>
                                                     <div className="p-1">
@@ -144,7 +91,8 @@ const Index = () => {
                                                     {/*    View*/}
                                                     {/*</a>*/}
 
-                                                    <Button className="btn btn-lg btn-warning w-100" variant="primary"
+                                                    <Button className="btn btn-lg btn-warning w-100"
+                                                            variant="primary"
                                                             onClick={() => handleShow2(j, i)}>
                                                         View Details
                                                     </Button>
@@ -158,6 +106,7 @@ const Index = () => {
                     )}
                 </div>
             </div>
+
 
             <Modal show={show} backdrop="static" onHide={handleClose} fullscreen={fullscreen}>
                 <Modal.Header className={'text-primary bg-light'} closeButton>
@@ -230,9 +179,81 @@ const Index = () => {
                 </Modal.Body>
             </Modal>
 
+
         </>
     );
-
-
 };
+
+export async function getServerSideProps(context) {
+    const {params} = context;
+    let data = []
+    const {wallet_address} = params
+    const address = wallet_address
+    console.log(wallet_address)
+
+    try {
+        if (!Moralis.Core.isStarted) {
+            await Moralis.start({
+
+                apiKey: "4RU0eLSFjSgPQ18NT5BwzjYXgmpHrjNzUhRqXTTPnAscuwLAmnepyuv1Enuka5kz",
+                //apiKey:"b4EmKq4fQf6VfnIUTGp1Y3kUawuQNLPOHmPIyTslv6J0jO0HGR60LDJRgnxMWOfb",
+                //apiKey:"LR4MaImuhPwERyz5wRbu1nucPAS7OpTRNUmN8NBvS0NkxTsbyZ2z2BVPnjr5F9Ve",
+                //apiKey:"EoTGJXXlB7tkZDGHZPYIM6W6o5azMMfCud95GdMEGN8BKB9lW90KuttG8FBp3a4M",
+                //apiKey: "KdjkU96qdEJYq1rawMj8rA7yxnDbqlJmM8OABLYhxYYkKP1HJnjPrCMlnT72U6pa",
+                //apiKey: "nXdL5qBg2eRqrGMNKGPVwSx03qA9f25hhklyoH3FEnB115PyleGkbVAPZHAVjMcu",
+                //apiKey: "4bgfzTMcyFlZoKOUyL6mzEVzy7dHRHc1mMXKxyk4Woc5vy62Dju2HFgGxJRglVQ2",
+
+                //apiKey: "o51apwdpAy9uwovgBotIisyFSTR3N8zXW1ncHotAGNdj5mIY45OiQaa6fJfx49xU",
+                // apiKey: "PfTvLGgNhIVyt1fGaR4FD1XDq1xmKnAM204Y5A0TxXUnPjgQZVNXtcoIhFhdz1hu",
+                // apiKey: "9VkTXlA8DUTnE2uUQu1vUdMpujtKcZVbjJcIFUUP4WOjADWwYMtzqbQFdUR3y8Ha",
+
+                // ...and any other configuration
+            });
+        }
+        const allNFTsResult = [];
+        const allNFTs = [];
+
+        // const address = waddress;
+        //const caddress = "0x5bba9780a85979af73d43cef8cce9aea330677ec";
+        //const address = "0xe7C161519b315AE58f42f3B1709F42aE9A34A9E0";
+        // const address = "0x5bbA9780a85979AF73D43CEf8CCE9Aea330677EC";
+        // const address = "0xd7dEa8a8864ec89Db0E310Ded5a174Eac3724643";
+        // const address = "0xB4778b0b44c635e9Ad453674D66C19fE828Ef45A";
+
+        const chains = [EvmChain.POLYGON, EvmChain.ETHEREUM, EvmChain.BSC];
+
+        for (const chain of chains) {
+            const response = await Moralis.EvmApi.nft.getWalletNFTs({
+                address,
+                chain,
+            });
+            allNFTs.push(response);
+        }
+
+        allNFTs.map((n) => {
+            let arr = [];
+            n.jsonResponse.result.map(async (a) => {
+                if (a.token_uri) { //removing token with no token_uri
+                    // arr.push(a)
+                    if (a.symbol === "UD" || a.symbol === "ENS") { //Filtering only UD and ENS
+                        // a.metadata = await getMetaData(a.token_uri)
+                        arr.push(a)
+                    }
+                }
+            })
+            allNFTsResult.push(arr);
+        })
+        data = allNFTsResult;
+        console.log(allNFTsResult);
+    } catch (e) {
+        console.log(e)
+    }
+
+    return {
+        props: {
+            data,
+        },
+    };
+}
+
 export default Index;
