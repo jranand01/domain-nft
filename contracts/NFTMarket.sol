@@ -113,7 +113,6 @@ contract NFTMarket is ReentrancyGuard,ERC721URIStorage {
     }
 
     //=========@anand_code allows someone to resell a token they have purchased
-/*
     function resellToken(address nftContract, uint256 marketItemId, uint256 price) public payable nonReentrant {
         uint256 itemId = idToMarketItem[marketItemId].tokenId;
         uint256 tokenId = itemId;
@@ -121,8 +120,7 @@ contract NFTMarket is ReentrancyGuard,ERC721URIStorage {
         require(idToMarketItem[tokenId].owner == msg.sender, "Only item owner can resell NFTs");
 
         IERC721(nftContract).approve(owner, tokenId);
-        */
-/* allows someone to resell a token they have purchased *//*
+ //allows someone to resell a token they have purchased
 
         setApprovalForAll(owner, true);
         //------------------------------------------resell market item
@@ -149,43 +147,8 @@ contract NFTMarket is ReentrancyGuard,ERC721URIStorage {
         );
 
     }
-*/
 
     //=========@anand_code allows someone to resell a token they have purchased
-    function resellToken(address nftContract, uint256 marketItemId, uint256 price) public payable nonReentrant {
-        uint256 itemId = 12;
-        uint256 tokenId = itemId;
-        require(tokenId > 0, "Market item has to exist");
-        require(idToMarketItem[tokenId].owner == msg.sender, "Only item owner can resell NFTs");
-
-        IERC721(nftContract).approve(owner, tokenId);
-        /* allows someone to resell a token they have purchased */
-        setApprovalForAll(owner, true);
-        //------------------------------------------resell market item
-        idToMarketItem[itemId].itemId = itemId;
-        idToMarketItem[tokenId].tokenId = tokenId;
-        idToMarketItem[tokenId].canceled = false;
-
-        idToMarketItem[tokenId].sold = false;
-        idToMarketItem[tokenId].price = price;
-        idToMarketItem[tokenId].seller = payable(msg.sender);
-        idToMarketItem[tokenId].owner = payable(address(this));
-
-        IERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
-        _tokensCanceled.decrement();
-        emit MarketItemCreated(
-            itemId,
-            nftContract,
-            tokenId,
-            msg.sender,
-            address(this),
-            price,
-            false,
-            false
-        );
-
-    }
-
 
     /* remove your nft from sale of a marketplace item */
     /*    function cancelSellOrder(uint256 tokenId) external {
